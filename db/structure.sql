@@ -107,6 +107,43 @@ CREATE TABLE ar_internal_metadata (
 
 
 --
+-- Name: cached_subscriptions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE cached_subscriptions (
+    id bigint NOT NULL,
+    stripe_id character varying,
+    customer_description character varying,
+    customer_email character varying,
+    status character varying,
+    canceled_at timestamp without time zone,
+    ended_at timestamp without time zone,
+    start timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: cached_subscriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE cached_subscriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cached_subscriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE cached_subscriptions_id_seq OWNED BY cached_subscriptions.id;
+
+
+--
 -- Name: delayed_jobs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -207,6 +244,13 @@ CREATE TABLE schema_migrations (
 
 
 --
+-- Name: cached_subscriptions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY cached_subscriptions ALTER COLUMN id SET DEFAULT nextval('cached_subscriptions_id_seq'::regclass);
+
+
+--
 -- Name: delayed_jobs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -226,6 +270,14 @@ ALTER TABLE ONLY failed_jobs ALTER COLUMN id SET DEFAULT nextval('failed_jobs_id
 
 ALTER TABLE ONLY ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: cached_subscriptions cached_subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY cached_subscriptions
+    ADD CONSTRAINT cached_subscriptions_pkey PRIMARY KEY (id);
 
 
 --
@@ -328,6 +380,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180408090170'),
 ('20180408090171'),
 ('20180408090172'),
-('20180408090173');
+('20180408090173'),
+('20180409031732');
 
 
