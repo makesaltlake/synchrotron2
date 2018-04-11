@@ -180,6 +180,104 @@ ALTER SEQUENCE cached_subscriptions_id_seq OWNED BY cached_subscriptions.id;
 
 
 --
+-- Name: certification_instructors; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE certification_instructors (
+    id bigint NOT NULL,
+    certification_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: certification_instructors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE certification_instructors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: certification_instructors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE certification_instructors_id_seq OWNED BY certification_instructors.id;
+
+
+--
+-- Name: certification_recipients; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE certification_recipients (
+    id bigint NOT NULL,
+    certification_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    certified_at timestamp without time zone,
+    revoked_at timestamp without time zone,
+    revoked_reason text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: certification_recipients_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE certification_recipients_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: certification_recipients_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE certification_recipients_id_seq OWNED BY certification_recipients.id;
+
+
+--
+-- Name: certifications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE certifications (
+    id bigint NOT NULL,
+    name character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: certifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE certifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: certifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE certifications_id_seq OWNED BY certifications.id;
+
+
+--
 -- Name: delayed_jobs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -339,6 +437,27 @@ ALTER TABLE ONLY cached_subscriptions ALTER COLUMN id SET DEFAULT nextval('cache
 
 
 --
+-- Name: certification_instructors id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY certification_instructors ALTER COLUMN id SET DEFAULT nextval('certification_instructors_id_seq'::regclass);
+
+
+--
+-- Name: certification_recipients id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY certification_recipients ALTER COLUMN id SET DEFAULT nextval('certification_recipients_id_seq'::regclass);
+
+
+--
+-- Name: certifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY certifications ALTER COLUMN id SET DEFAULT nextval('certifications_id_seq'::regclass);
+
+
+--
 -- Name: delayed_jobs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -381,6 +500,30 @@ ALTER TABLE ONLY ar_internal_metadata
 
 ALTER TABLE ONLY cached_subscriptions
     ADD CONSTRAINT cached_subscriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: certification_instructors certification_instructors_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY certification_instructors
+    ADD CONSTRAINT certification_instructors_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: certification_recipients certification_recipients_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY certification_recipients
+    ADD CONSTRAINT certification_recipients_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: certifications certifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY certifications
+    ADD CONSTRAINT certifications_pkey PRIMARY KEY (id);
 
 
 --
@@ -441,6 +584,48 @@ CREATE INDEX index_active_admin_comments_on_namespace ON active_admin_comments U
 --
 
 CREATE INDEX index_active_admin_comments_on_resource_type_and_resource_id ON active_admin_comments USING btree (resource_type, resource_id);
+
+
+--
+-- Name: index_certification_instructors_on_certification_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_certification_instructors_on_certification_id ON certification_instructors USING btree (certification_id);
+
+
+--
+-- Name: index_certification_instructors_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_certification_instructors_on_user_id ON certification_instructors USING btree (user_id);
+
+
+--
+-- Name: index_certification_recipients_on_certification_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_certification_recipients_on_certification_id ON certification_recipients USING btree (certification_id);
+
+
+--
+-- Name: index_certification_recipients_on_certification_id_and_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_certification_recipients_on_certification_id_and_user_id ON certification_recipients USING btree (certification_id, user_id) WHERE (revoked_at IS NULL);
+
+
+--
+-- Name: index_certification_recipients_on_certified_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_certification_recipients_on_certified_at ON certification_recipients USING btree (certified_at);
+
+
+--
+-- Name: index_certification_recipients_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_certification_recipients_on_user_id ON certification_recipients USING btree (user_id);
 
 
 --
@@ -507,6 +692,38 @@ CREATE TRIGGER delayed_jobs_before_insert_row_tr BEFORE INSERT ON delayed_jobs F
 
 
 --
+-- Name: certification_recipients fk_rails_01cefacbf5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY certification_recipients
+    ADD CONSTRAINT fk_rails_01cefacbf5 FOREIGN KEY (certification_id) REFERENCES certifications(id);
+
+
+--
+-- Name: certification_instructors fk_rails_36d6e25e4c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY certification_instructors
+    ADD CONSTRAINT fk_rails_36d6e25e4c FOREIGN KEY (certification_id) REFERENCES certifications(id);
+
+
+--
+-- Name: certification_recipients fk_rails_43d6f23d3f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY certification_recipients
+    ADD CONSTRAINT fk_rails_43d6f23d3f FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: certification_instructors fk_rails_81b503280a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY certification_instructors
+    ADD CONSTRAINT fk_rails_81b503280a FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -538,6 +755,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180411013921'),
 ('20180411014918'),
 ('20180411015211'),
-('20180411055646');
+('20180411055646'),
+('20180411063031'),
+('20180411063040'),
+('20180411063049');
 
 
