@@ -5,4 +5,8 @@ class User < ApplicationRecord
 
   has_many :certification_instructors
   has_many :certification_recipients
+
+  def display_name
+    "##{id}: #{email}"
+  end
 end
