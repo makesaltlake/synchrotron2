@@ -299,7 +299,9 @@ CREATE TABLE users (
     unlock_token character varying,
     locked_at timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    site_admin boolean DEFAULT false NOT NULL,
+    shop_admin boolean DEFAULT false NOT NULL
 );
 
 
@@ -535,6 +537,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180409031732'),
 ('20180411013921'),
 ('20180411014918'),
-('20180411015211');
+('20180411015211'),
+('20180411055646');
 
 

@@ -1,5 +1,5 @@
 ActiveAdmin.register User do
-  permit_params :email, :password, :password_confirmation
+  permit_params :email, :password, :password_confirmation, :site_admin, :shop_admin
 
   index do
     selectable_column
@@ -7,6 +7,8 @@ ActiveAdmin.register User do
     column :email
     column :current_sign_in_at
     column :sign_in_count
+    column :site_admin
+    column :shop_admin
     column :created_at
     actions
   end
@@ -14,6 +16,8 @@ ActiveAdmin.register User do
   filter :email
   filter :current_sign_in_at
   filter :sign_in_count
+  filter :site_admin
+  filter :shop_admin
   filter :created_at
 
   form do |f|
@@ -21,6 +25,8 @@ ActiveAdmin.register User do
       f.input :email
       f.input :password
       f.input :password_confirmation
+      f.input :site_admin
+      f.input :shop_admin
     end
     f.actions
   end
