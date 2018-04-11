@@ -31,4 +31,13 @@ ActiveAdmin.register User do
     f.actions
   end
 
+  # allow users to be updated without also updating their password
+  controller do
+    def update
+      if params[:user][:password].blank?
+        %w(password password_confirmation).each { |p| params[:user].delete(p) }
+      end
+      super
+    end
+  end
 end
