@@ -9,4 +9,8 @@ class User < ApplicationRecord
   def display_name
     "##{id}: #{email}"
   end
+
+  def short_display_name
+    email
+  end
 end

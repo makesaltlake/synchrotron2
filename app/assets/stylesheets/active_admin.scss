@@ -1,3 +1,4 @@
+//= require activeadmin_addons/all
 // SASS variable overrides must be declared before loading up Active Admin's styles.
 //
 // To view the variables that Active Admin provides, take a look at
@@ -10,6 +11,8 @@
 // Active Admin's got SASS!
 @import "active_admin/mixins";
 // @import "active_admin/base";
+
+@import "activeadmin_addons/all";
 
 $primary-color: #4bacfe;
 @import "arctic_admin/base";

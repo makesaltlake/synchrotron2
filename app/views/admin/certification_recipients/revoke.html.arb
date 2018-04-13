@@ -1,0 +1,10 @@
+active_admin_form_for '' do |f|
+  f.inputs do
+    f.input :revoked_reason, type: :text, as: :text, label: false, required: false, placeholder: 'Enter a reason...'
+  end
+
+  f.actions do
+    f.action :submit, label: 'Revoke'
+    f.action :cancel, label: 'Cancel'
+  end
+end

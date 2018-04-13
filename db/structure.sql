@@ -223,7 +223,9 @@ CREATE TABLE certification_recipients (
     revoked_at timestamp without time zone,
     revoked_reason text,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    certified_by_id bigint,
+    revoked_by_id bigint
 );
 
 
@@ -594,6 +596,13 @@ CREATE INDEX index_certification_instructors_on_certification_id ON certificatio
 
 
 --
+-- Name: index_certification_instructors_on_certification_id_and_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_certification_instructors_on_certification_id_and_user_id ON certification_instructors USING btree (certification_id, user_id);
+
+
+--
 -- Name: index_certification_instructors_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -619,6 +628,20 @@ CREATE UNIQUE INDEX index_certification_recipients_on_certification_id_and_user_
 --
 
 CREATE INDEX index_certification_recipients_on_certified_at ON certification_recipients USING btree (certified_at);
+
+
+--
+-- Name: index_certification_recipients_on_certified_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_certification_recipients_on_certified_by_id ON certification_recipients USING btree (certified_by_id);
+
+
+--
+-- Name: index_certification_recipients_on_revoked_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_certification_recipients_on_revoked_by_id ON certification_recipients USING btree (revoked_by_id);
 
 
 --
@@ -700,6 +723,14 @@ ALTER TABLE ONLY certification_recipients
 
 
 --
+-- Name: certification_recipients fk_rails_0b46e4cc8e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY certification_recipients
+    ADD CONSTRAINT fk_rails_0b46e4cc8e FOREIGN KEY (revoked_by_id) REFERENCES users(id);
+
+
+--
 -- Name: certification_instructors fk_rails_36d6e25e4c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -713,6 +744,14 @@ ALTER TABLE ONLY certification_instructors
 
 ALTER TABLE ONLY certification_recipients
     ADD CONSTRAINT fk_rails_43d6f23d3f FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: certification_recipients fk_rails_6a07ed676b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY certification_recipients
+    ADD CONSTRAINT fk_rails_6a07ed676b FOREIGN KEY (certified_by_id) REFERENCES users(id);
 
 
 --
@@ -758,6 +797,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180411055646'),
 ('20180411063031'),
 ('20180411063040'),
-('20180411063049');
+('20180411063049'),
+('20180412063155'),
+('20180412064304');
 
 
